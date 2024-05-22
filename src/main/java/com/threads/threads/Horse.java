@@ -27,11 +27,11 @@ public class Horse {
     }
 
     public boolean reachGoal() {
-        return distance >= 100;
+        return distance >= 1000;
     }
 
     public int calculateWaitingTime() {
-        int sleep = generateRandomValueBetween(1, 5); // Entre 1 y 5 segundos
+        int sleep = generateRandomValueBetween(1, 5);
         return Math.min(sleep, resiliency);
     }
 }

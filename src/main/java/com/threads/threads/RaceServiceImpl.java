@@ -11,7 +11,7 @@ import java.util.stream.IntStream;
 public class RaceServiceImpl implements RaceService{
 
     private final AtomicBoolean finishedRace = new AtomicBoolean(false);
-    private final List<Horse> winners = new ArrayList<>(); // Lista para almacenar los nombres de los caballos ganadores
+    private final List<Horse> winners = new ArrayList<>();
 
     public List<Horse> winners(int horses) throws InterruptedException {
 
@@ -21,8 +21,16 @@ public class RaceServiceImpl implements RaceService{
         // int availableProcessors = Runtime.getRuntime().availableProcessors();  tradicional o virtual
 
         //****************************** creacion **********************************************
+
+        // Se crea el area compartida
+        Area area = new Area();
+
+        // Se inicia el hilo del area
+        Thread areaUpdaterThread = new Thread(new AreaUpdater(area));
+        areaUpdaterThread.start();
+
         List<Thread> threads = IntStream.range(0, horses)
-                .mapToObj(i -> new Thread(new ThreadService(new Horse("Caballo " + i + 1), finishedRace, winners)))
+                .mapToObj(i -> new Thread(new ThreadService(new Horse("Caballo " + i + 1), finishedRace, winners, area)))
                 .toList();
 
         //****************************** inician **********************************************
@@ -31,11 +39,12 @@ public class RaceServiceImpl implements RaceService{
         //****************************** mientras no ganen 3 **********************************************
         while (winners.size() != 3 && !finishedRace.get()) {
             try {
-                Thread.sleep(1000); // Esperar 1 segundo
+                Thread.sleep(1000);
                 if (winners.size() == 3) {
                     //interrumpe los hilos
                     threads.forEach(Thread::interrupt);
                     finishedRace.set(true);
+                    areaUpdaterThread.interrupt();
 
                 }
             } catch (InterruptedException e) {
@@ -47,6 +56,7 @@ public class RaceServiceImpl implements RaceService{
         this.printWinners(winners);
 
         //****************************** terminar flujos **********************************************
+        finishedRace.set(false);
         winners.clear();
         return winners;
     }
@@ -66,7 +76,7 @@ public class RaceServiceImpl implements RaceService{
             puesto++;
             Thread.sleep(1000);
         }
-        finishedRace.set(false);//limpia la carrera para volver a correr
+        finishedRace.set(false);
         System.out.println("=========================================================================");
     }
 
