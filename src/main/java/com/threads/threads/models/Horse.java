@@ -1,4 +1,4 @@
-package com.threads.threads;
+package com.threads.threads.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -27,7 +27,7 @@ public class Horse {
     }
 
     public boolean reachGoal() {
-        return distance >= 1000;
+        return distance >= 100;
     }
 
     public int calculateWaitingTime() {

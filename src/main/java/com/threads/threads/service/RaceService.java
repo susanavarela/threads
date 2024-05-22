@@ -1,4 +1,6 @@
-package com.threads.threads;
+package com.threads.threads.service;
+
+import com.threads.threads.models.Horse;
 
 import java.util.List;
 

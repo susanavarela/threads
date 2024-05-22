@@ -1,9 +1,11 @@
-package com.threads.threads;
+package com.threads.threads.service;
 
-public class AreaUpdater implements Runnable {
+import com.threads.threads.models.Area;
+
+public class AreaUpdaterService implements Runnable {
     private final Area area;
 
-    public AreaUpdater(Area area) {
+    public AreaUpdaterService(Area area) {
         this.area = area;
     }
 

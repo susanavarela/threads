@@ -1,4 +1,4 @@
-package com.threads.threads;
+package com.threads.threads.models;
 
 import java.util.Random;
 import java.util.concurrent.locks.Lock;

@@ -1,5 +1,7 @@
-package com.threads.threads;
+package com.threads.threads.controller;
 
+import com.threads.threads.models.Input;
+import com.threads.threads.service.RaceService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

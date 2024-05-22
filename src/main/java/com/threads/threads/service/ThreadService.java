@@ -1,4 +1,7 @@
-package com.threads.threads;
+package com.threads.threads.service;
+
+import com.threads.threads.models.Area;
+import com.threads.threads.models.Horse;
 
 import java.util.List;
 import java.util.Random;

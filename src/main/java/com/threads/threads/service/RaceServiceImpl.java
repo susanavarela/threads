@@ -1,5 +1,7 @@
-package com.threads.threads;
+package com.threads.threads.service;
 
+import com.threads.threads.models.Area;
+import com.threads.threads.models.Horse;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -8,14 +10,15 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.IntStream;
 
 @Service
-public class RaceServiceImpl implements RaceService{
+public class RaceServiceImpl implements RaceService {
 
     private final AtomicBoolean finishedRace = new AtomicBoolean(false);
     private final List<Horse> winners = new ArrayList<>();
 
     public List<Horse> winners(int horses) throws InterruptedException {
 
-
+        finishedRace.set(false);
+        winners.clear();
         //*************************** revisar que tipo de hilos *************************************
 
         // int availableProcessors = Runtime.getRuntime().availableProcessors();  tradicional o virtual
@@ -26,7 +29,7 @@ public class RaceServiceImpl implements RaceService{
         Area area = new Area();
 
         // Se inicia el hilo del area
-        Thread areaUpdaterThread = new Thread(new AreaUpdater(area));
+        Thread areaUpdaterThread = new Thread(new AreaUpdaterService(area));
         areaUpdaterThread.start();
 
         List<Thread> threads = IntStream.range(0, horses)
@@ -55,9 +58,6 @@ public class RaceServiceImpl implements RaceService{
         //****************************** imprimir ganadores **********************************************
         this.printWinners(winners);
 
-        //****************************** terminar flujos **********************************************
-        finishedRace.set(false);
-        winners.clear();
         return winners;
     }
 
