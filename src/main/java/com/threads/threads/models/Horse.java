@@ -27,7 +27,7 @@ public class Horse {
     }
 
     public boolean reachGoal() {
-        return distance >= 100;
+        return distance >= 1000;
     }
 
     public int calculateWaitingTime() {

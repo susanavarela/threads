@@ -14,9 +14,13 @@ public class TraditionalThreadRaceServiceImpl implements TraditionalThreadRaceSe
 
     private final AtomicBoolean finishedRace = new AtomicBoolean(false);
     private final List<Horse> winners = new ArrayList<>();
+    private PrintService printService;
+
+    public TraditionalThreadRaceServiceImpl() {
+        this.printService = new PrintService(winners);
+    }
 
     public List<Horse> winners(int horses) throws InterruptedException {
-
         finishedRace.set(false);
         winners.clear();
 
@@ -50,28 +54,11 @@ public class TraditionalThreadRaceServiceImpl implements TraditionalThreadRaceSe
         }
 
         //****************************** imprimir ganadores **********************************************
-        this.printWinners(winners);
+        finishedRace.set(true);
+        printService.printWinners();
+        finishedRace.set(false);
 
         return winners;
-    }
-
-
-    private void printWinners(List<Horse> winners) throws InterruptedException {
-
-        finishedRace.set(true);
-        System.out.println("Caballos ganadores:");
-        System.out.println("=========================================================================");
-        int puesto = 1;
-        for (Horse winner : winners) {
-            Thread.sleep(1000);
-            System.out.println(String.format("++++++++++++++++++++++++++++++++ Puesto %d++++++++++++++++++++++++++++++++++++++++", puesto));
-            System.out.println(winner.getName());
-            System.out.println(winner.getDistance());
-            puesto++;
-            Thread.sleep(1000);
-        }
-        finishedRace.set(false);
-        System.out.println("=========================================================================");
     }
 
 }
