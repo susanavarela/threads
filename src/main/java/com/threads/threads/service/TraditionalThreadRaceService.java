@@ -4,7 +4,7 @@ import com.threads.threads.models.Horse;
 
 import java.util.List;
 
-public interface RaceService {
+public interface TraditionalThreadRaceService {
 
     List<Horse> winners(int horses) throws InterruptedException;
 }

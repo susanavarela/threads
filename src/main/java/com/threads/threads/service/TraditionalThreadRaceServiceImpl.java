@@ -10,7 +10,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.IntStream;
 
 @Service
-public class RaceServiceImpl implements RaceService {
+public class TraditionalThreadRaceServiceImpl implements TraditionalThreadRaceService {
 
     private final AtomicBoolean finishedRace = new AtomicBoolean(false);
     private final List<Horse> winners = new ArrayList<>();
@@ -19,16 +19,11 @@ public class RaceServiceImpl implements RaceService {
 
         finishedRace.set(false);
         winners.clear();
-        //*************************** revisar que tipo de hilos *************************************
-
-        // int availableProcessors = Runtime.getRuntime().availableProcessors();  tradicional o virtual
 
         //****************************** creacion **********************************************
 
-        // Se crea el area compartida
         Area area = new Area();
 
-        // Se inicia el hilo del area
         Thread areaUpdaterThread = new Thread(new AreaUpdaterService(area));
         areaUpdaterThread.start();
 
@@ -36,7 +31,6 @@ public class RaceServiceImpl implements RaceService {
                 .mapToObj(i -> new Thread(new ThreadService(new Horse("Caballo " + i + 1), finishedRace, winners, area)))
                 .toList();
 
-        //****************************** inician **********************************************
         threads.forEach(Thread::start);
 
         //****************************** mientras no ganen 3 **********************************************
