@@ -35,3 +35,14 @@ Si algún caballo pisa el área, espera 7 segundos y avanza 100 metros. Luego de
 disponible para todos los caballos, antes debe estar "loqueado" por dichocaballo.	
 ***
 ***
+
+### Request
+Metodo: Post
+
+http://localhost:8080/process
+``` json
+{
+"input":20
+}
+``` 
+***

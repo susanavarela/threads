@@ -9,18 +9,23 @@ import java.util.List;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.stream.IntStream;
-import java.util.concurrent.Executors;
+
 @Service
 public class VirtualThreadRaceServiceImpl implements VirtualThreadRaceService {
 
     private final AtomicBoolean finishedRace = new AtomicBoolean(false);
     private final List<Horse> winners = new ArrayList<>();
+    private PrintService printService;
+
+    public VirtualThreadRaceServiceImpl() {
+        this.printService = new PrintService(winners);
+    }
 
     public List<Horse> winners(int horses) throws InterruptedException {
-
         finishedRace.set(false);
         winners.clear();
 
@@ -40,7 +45,7 @@ public class VirtualThreadRaceServiceImpl implements VirtualThreadRaceService {
             try {
                 Thread.sleep(1000);
                 if (winners.size() == 3) {
-                    // Cancelar las tareas
+
                     futures.forEach(future -> future.cancel(true));
                     finishedRace.set(true);
                     areaUpdaterFuture.cancel(true);
@@ -59,27 +64,12 @@ public class VirtualThreadRaceServiceImpl implements VirtualThreadRaceService {
         }
 
         //****************************** imprimir ganadores **********************************************
-        this.printWinners(winners);
+        finishedRace.set(true);
+        printService.printWinners();
+        finishedRace.set(false);
 
         executor.shutdown();
 
         return winners;
-    }
-
-    private void printWinners(List<Horse> winners) throws InterruptedException {
-        finishedRace.set(true);
-        System.out.println("Caballos ganadores:");
-        System.out.println("=========================================================================");
-        int puesto = 1;
-        for (Horse winner : winners) {
-            Thread.sleep(1000);
-            System.out.println(String.format("++++++++++++++++++++++++++++++++ Puesto %d++++++++++++++++++++++++++++++++++++++++", puesto));
-            System.out.println(winner.getName());
-            System.out.println(winner.getDistance());
-            puesto++;
-            Thread.sleep(1000);
-        }
-        finishedRace.set(false);
-        System.out.println("=========================================================================");
     }
 }
