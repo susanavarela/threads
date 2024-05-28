@@ -1,4 +1,4 @@
-package com.threads.threads;
+package com.threads.threads.models;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
